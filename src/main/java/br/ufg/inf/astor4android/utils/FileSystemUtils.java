@@ -48,33 +48,45 @@ public class FileSystemUtils {
 	}
 
 	public static List<String> findFilesWithExtension(File directory, String extension, boolean fullPath) throws Exception {
-		ArrayList<String> filesFound = new ArrayList<>();
-		ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
+		if (directory.exists() && directory.isDirectory() && directory.canRead()) {
+			ArrayList<String> filesFound = new ArrayList<>();
 
-    	for (File child : files){
-    		if(child.isDirectory())
-    			filesFound.addAll(findFilesWithExtension(child, extension, fullPath));
+			ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
 
-    		if(child.getName().contains("." + extension)){
-                if(fullPath)
-                    filesFound.add(child.getAbsolutePath());
-                else
-                    filesFound.add(child.getName());
-            }
-   	 	}
+			for (File child : files) {
+				if (child.isDirectory())
+					filesFound.addAll(findFilesWithExtension(child, extension, fullPath));
 
-   	 	return filesFound;
+				if (child.getName().contains("." + extension)) {
+					if (fullPath)
+						filesFound.add(child.getAbsolutePath());
+					else
+						filesFound.add(child.getName());
+				}
+			}
+
+			return filesFound;
+		} else {
+			String canRead = directory.canRead() ? "true" : "false";
+			System.out.println("findFilesWithExtension - error reading file");
+			return new ArrayList<>();
+		}
 	}
 
     public static List<String> listContentsDirectory(File directory) throws Exception {
-        ArrayList<String> filesFound = new ArrayList<>();
-        ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
+		try{
+			ArrayList<String> filesFound = new ArrayList<>();
+			ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
 
-        for (File child : files)
-            filesFound.add(child.getName());
-        
-        return filesFound;
+			for (File child : files)
+				filesFound.add(child.getName());
+
+			return filesFound;
+		} catch (Exception e) {
+			return new ArrayList<>();
+		}
     }
+
 
     /* Replace '/' with the correct file separator */
     public static String fixPath(String path) {
