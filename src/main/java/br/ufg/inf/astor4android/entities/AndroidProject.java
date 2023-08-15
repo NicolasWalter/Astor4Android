@@ -132,16 +132,16 @@ public class AndroidProject {
 		out.write("\n\tmavenLocal()\n}\n\n");
 		
 
-		BufferedReader in = new BufferedReader(new FileReader("save.gradle"));
-		String line;
-		while ((line = in.readLine()) != null) 
-            out.write("\n" + line);
-
-        in.close();
+//		BufferedReader in = new BufferedReader(new FileReader("save.gradle"));
+//		String line;
+//		while ((line = in.readLine()) != null)
+//            out.write("\n" + line);
+//
+//        in.close();
    		out.close();
-
-   		AndroidToolsExecutorProcess.runGradleTask(projectAbsolutePath, "saveDependencies");
-   		checkDataBinding();
+//
+//   		AndroidToolsExecutorProcess.runGradleTask(projectAbsolutePath, "saveDependencies");
+//   		checkDataBinding();
 
    		extractAAR(projectAbsolutePath + "/" + mainFolder + "/localrepo");
 	}
@@ -265,15 +265,16 @@ public class AndroidProject {
 
 			AndroidToolsExecutorProcess.compileProject(projectAbsolutePath);
 
+			dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/debug") + System.getProperty("path.separator");
 			for(String project : subprojects) {
-				output = FileSystemUtils.listContentsDirectory(new File(projectAbsolutePath + project + "/build/intermediates/classes/"));
+				output = FileSystemUtils.listContentsDirectory(new File(projectAbsolutePath + project + "/build/intermediates/javac/"));
 
 				for(String entry : output){
 					if(entry.equals("debug"))
-						dependencies += FileSystemUtils.fixPath(projectAbsolutePath + project + "/build/intermediates/classes/debug/") + System.getProperty("path.separator");
+						dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/javac/debug/classes/") + System.getProperty("path.separator");
 
 					else if(!entry.equals("release")){
-						dependencies += FileSystemUtils.fixPath(projectAbsolutePath + project + "/build/intermediates/classes/" + entry + "/debug/") + System.getProperty("path.separator");
+						dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/javac/" + entry + "/classes/") + System.getProperty("path.separator");
 					}
 				}
 
