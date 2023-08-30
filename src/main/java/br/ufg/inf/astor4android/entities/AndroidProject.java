@@ -266,7 +266,7 @@ public class AndroidProject {
 			AndroidToolsExecutorProcess.compileProject(projectAbsolutePath);
 
 			dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/debug") + System.getProperty("path.separator");
-			//dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/generated/not_namespaced_r_class_sources/debug/processDebugResources") + System.getProperty("path.separator");
+			dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/generated/not_namespaced_r_class_sources/debug/processDebugResources") + System.getProperty("path.separator");
 			dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/") + System.getProperty("path.separator");
 			for(String project : subprojects) {
 				boolean javac = true;
