@@ -266,20 +266,37 @@ public class AndroidProject {
 			AndroidToolsExecutorProcess.compileProject(projectAbsolutePath);
 
 			dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/debug") + System.getProperty("path.separator");
+			//dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/generated/not_namespaced_r_class_sources/debug/processDebugResources") + System.getProperty("path.separator");
+			dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/") + System.getProperty("path.separator");
 			for(String project : subprojects) {
-				output = FileSystemUtils.listContentsDirectory(new File(projectAbsolutePath + project + "/build/intermediates/javac/"));
+				boolean javac = true;
+				try{
+					output = FileSystemUtils.listContentsDirectory(new File(projectAbsolutePath + project + "/build/intermediates/javac/"));
+				} catch (Exception e){
+					output = FileSystemUtils.listContentsDirectory(new File(projectAbsolutePath + project + "/build/intermediates/classes/"));
+					javac = false;
+				}
 
 				for(String entry : output){
-					if(entry.equals("debug"))
-						dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/javac/debug/classes/") + System.getProperty("path.separator");
+					if(entry.equals("debug")){
+						if(javac) {
+							dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/javac/debug/classes/") + System.getProperty("path.separator");
+						}else {
+							dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/classes/debug/") + System.getProperty("path.separator");
+						}
+					}
 
 					else if(!entry.equals("release")){
-						dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/javac/" + entry + "/classes/") + System.getProperty("path.separator");
+						if(javac){
+							dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/javac/" + entry + "/classes/") + System.getProperty("path.separator");
+						}else {
+							dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/build/intermediates/classes/" + entry + "/debug/") + System.getProperty("path.separator");
+						}
 					}
 				}
 
 			}
-
+			dependencies += FileSystemUtils.fixPath(projectAbsolutePath + "/" + mainFolder + "/libs/") + System.getProperty("path.separator");
 			dependencies += FileSystemUtils.fixPath(AndroidToolsExecutorProcess.getAndroidHome() + "/platforms/android-" + compileVersion + "/android.jar");
 			logger.debug("Dependencies found: " + dependencies);
 		} catch(FileNotFoundException ex) {
