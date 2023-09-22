@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -87,8 +88,10 @@ public class Astor4AndroidMain extends AstorMain {
 		AndroidProject.getInstance().setup(new File(projectCopy));
 
 		dependencies = AndroidProject.getInstance().getDependencies();
+		List<String> failingList = (failing != null) ? Arrays.asList(failing.split(File.pathSeparator))
+				: new ArrayList<>();
 
-		projectFacade = getProject(projectCopy, projectName, method, null, dependencies, true);
+		projectFacade = getProject(projectCopy, projectName, method, failingList, dependencies, true);
 		projectFacade.getProperties().setExperimentName(this.getClass().getSimpleName());
 
 		projectFacade.setupWorkingDirectories(ProgramVariant.DEFAULT_ORIGINAL_VARIANT);
@@ -125,6 +128,7 @@ public class Astor4AndroidMain extends AstorMain {
 			properties.setDependencies(dependencies);
 		}
 
+		properties.setFailingTestCases(failingTestCases);
 		properties.setPackageToInstrument(ConfigurationProperties.getProperty("packageToInstrument"));
 		
 		//properties.setDataFolder(ConfigurationProperties.getProperty("resourcesfolder"));

@@ -47,7 +47,7 @@ public abstract class JUnitExecutorProcess {
 		jvmPath += File.separator + "java";
 		String systemcp = defineInitialClasspath();
 
-		classpath = systemcp + File.pathSeparator + classpath;
+		classpath = systemcp + File.pathSeparator + classpath + "/Users/jarribas/primos/tesis/astorworker/workDir/AstorWorker-app-android/app-android/app/build/intermediates/javac/debugUnitTest/classes:";
 
 		List<String> cls = new ArrayList<>(classesToExecute);
 
@@ -60,7 +60,8 @@ public abstract class JUnitExecutorProcess {
 			command.add("-cp");
 			command.add(classpath);
 			command.add(classNameToCall());
-			command.addAll(cls);
+			//command.addAll(cls);
+			command.add("de.tutao.tutanota.UtilsTest");
 
 			printCommandToExecute(command);
 

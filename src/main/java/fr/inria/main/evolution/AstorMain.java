@@ -208,7 +208,7 @@ public class AstorMain extends AbstractMain {
 		}
 
 		String dependencies = ConfigurationProperties.getProperty("dependenciespath");
-		String failing = ConfigurationProperties.getProperty("failing");
+		String failing = ConfigurationProperties.getProperty("unitfailing");
 		String location = ConfigurationProperties.getProperty("location");
 		String packageToInstrument = ConfigurationProperties.getProperty("packageToInstrument");
 		double thfl = ConfigurationProperties.getPropertyDouble("flthreshold");
