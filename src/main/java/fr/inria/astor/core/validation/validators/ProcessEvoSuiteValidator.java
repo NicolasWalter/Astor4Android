@@ -219,7 +219,7 @@ public class ProcessEvoSuiteValidator extends ProgramValidator {
 
 		int time = 60000;
 		String jvmPath = ConfigurationProperties.getProperty("jvm4evosuitetestexecution");
-		TestResult trregression = process.execute(jvmPath, processClasspath, testCasesRegression, time);
+		TestResult trregression = process.execute(jvmPath, processClasspath, testCasesRegression, time, true);
 
 		long t2 = System.currentTimeMillis();
 		currentStats.time2Validation.add((t2 - t1));

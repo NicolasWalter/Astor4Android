@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -38,18 +40,37 @@ public abstract class JUnitExecutorProcess {
 		super();
 	}
 
-	public TestResult execute(String jvmPath, URL[] classpath, List<String> classesToExecute, int waitTime) {
-		return execute(jvmPath, urlArrayToString(classpath), classesToExecute, waitTime);
+	public TestResult execute(String jvmPath, URL[] classpath, List<String> classesToExecute, int waitTime, boolean isRegression) {
+		return execute(jvmPath, urlArrayToString(classpath), classesToExecute, waitTime, isRegression);
 	}
 
-	public TestResult execute(String jvmPath, String classpath, List<String> classesToExecute, int waitTime) {
+	public TestResult execute(String jvmPath, String classpath, List<String> classesToExecute, int waitTime, boolean isRegression) {
 		Process p = null;
 		jvmPath += File.separator + "java";
 		String systemcp = defineInitialClasspath();
 
-		classpath = systemcp + File.pathSeparator + classpath + "/Users/jarribas/primos/tesis/astorworker/workDir/AstorWorker-app-android/app-android/app/build/intermediates/javac/debugUnitTest/classes:";
+		classpath = systemcp + File.pathSeparator + classpath;// + "/Users/jarribas/primos/tesis/astorworker/workDir/AstorWorker-app-android/app-android/app/build/intermediates/javac/debugUnitTest/classes:";
 
 		List<String> cls = new ArrayList<>(classesToExecute);
+
+		Set<String> res = new HashSet<>();
+		for(int i = 0; i < cls.size(); i++) {
+			String classString = cls.get(i);
+			String copy = cls.get(i);
+			if(classString.contains("#")){
+				String[] splittedClass = copy.split("#");
+				if(splittedClass.length>0){
+					if (isRegression) {
+						classString = splittedClass[0];
+					} else {
+						classString = splittedClass[0];
+					}
+				}
+			}
+			res.add(classString);
+		}
+
+		List<String> res2 = new ArrayList<>(res);
 
 		try {
 
@@ -60,8 +81,8 @@ public abstract class JUnitExecutorProcess {
 			command.add("-cp");
 			command.add(classpath);
 			command.add(classNameToCall());
-			//command.addAll(cls);
-			command.add("de.tutao.tutanota.UtilsTest");
+			command.addAll(res2);
+			//command.add("de.tutao.tutanota.UtilsTest");
 
 			printCommandToExecute(command);
 

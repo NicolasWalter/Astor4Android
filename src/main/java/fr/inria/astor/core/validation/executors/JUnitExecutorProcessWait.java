@@ -18,7 +18,7 @@ import fr.inria.astor.junitexec.JUnitTestExecutor;
 public abstract class JUnitExecutorProcessWait extends JUnitExecutorProcess {
 
 	@Override
-	public TestResult execute(String jvmPath, String path, List<String> classesToExecute, int waitTime) {
+	public TestResult execute(String jvmPath, String path, List<String> classesToExecute, int waitTime, boolean isRegression) {
 		Process p = null;
 
 		String javaPath = ConfigurationProperties.getProperty("jvm4evosuitetestexecution");

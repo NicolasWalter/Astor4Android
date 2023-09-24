@@ -150,7 +150,8 @@ public class ProgramVariantFactory {
 
 		for (CtClass ctclasspointed : classesFromModel) {
 			
-			List<String> allTest = projectFacade.getProperties().getRegressionTestCases();
+			//List<String> allTest = projectFacade.getProperties().getRegressionTestCases();
+			List<String> allTest = projectFacade.getProperties().getFailingTestCases();
 			String testn = ctclasspointed.getQualifiedName();
 			if(allTest.contains(testn) ){
 				//it's a test, we ignore it

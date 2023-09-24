@@ -70,7 +70,7 @@ public class ProcessValidator extends ProgramValidator {
 
 			TestResult trfailing = testProcessRunner.execute(jvmPath, bc,
 					projectFacade.getProperties().getFailingTestCases(),
-					ConfigurationProperties.getPropertyInt("tmax1"));
+					ConfigurationProperties.getPropertyInt("tmax1"), false);
 			long t2 = System.currentTimeMillis();
 			currentStats.time1Validation.add((t2 - t1));
 
@@ -110,7 +110,7 @@ public class ProcessValidator extends ProgramValidator {
 
 			TestResult trfailing = testProcessRunner.execute(jvmPath, bc,
 					projectFacade.getProperties().getFailingTestCases(),
-					ConfigurationProperties.getPropertyInt("tmax1"));
+					ConfigurationProperties.getPropertyInt("tmax1"), false);
 			if (trfailing == null)
 				return null;
 			else {
@@ -183,12 +183,14 @@ public class ProcessValidator extends ProgramValidator {
 			JUnitExecutorProcess p, ProjectRepairFacade projectFacade) {
 		log.debug("-Test Failing is passing, Executing regression");
 		long t1 = System.currentTimeMillis();
-		List<String> testCasesRegression = projectFacade.getProperties().getRegressionTestCases();
+
+		List<String> testCasesRegression = projectFacade.getProperties().getFailingTestCases();
+		//List<String> testCasesRegression = projectFacade.getProperties().getRegressionTestCases();
 
 		String jvmPath = ConfigurationProperties.getProperty("jvm4testexecution");
 
 		TestResult trregression = p.execute(jvmPath, bc, testCasesRegression,
-				ConfigurationProperties.getPropertyInt("tmax2"));
+				ConfigurationProperties.getPropertyInt("tmax2"), true);
 
 		if (testCasesRegression == null || testCasesRegression.isEmpty()) {
 			log.error("Any test case for regression testing");
@@ -217,13 +219,14 @@ public class ProcessValidator extends ProgramValidator {
 		TestResult trregressionall = new TestResult();
 		long t1 = System.currentTimeMillis();
 
-		for (String tc : projectFacade.getProperties().getRegressionTestCases()) {
+		//for (String tc : projectFacade.getProperties().getRegressionTestCases()) {
+		for (String tc : projectFacade.getProperties().getFailingTestCases()) {
 
 			List<String> parcial = new ArrayList<String>();
 			parcial.add(tc);
 			String jvmPath = ConfigurationProperties.getProperty("jvm4testexecution");
-
-			TestResult trregression = p.execute(jvmPath, bc, parcial, ConfigurationProperties.getPropertyInt("tmax2"));
+ 
+			TestResult trregression = p.execute(jvmPath, bc, parcial, ConfigurationProperties.getPropertyInt("tmax2"), true);
 			if (trregression == null) {
 				log.debug("The validation 2 have not finished well");
 				return null;

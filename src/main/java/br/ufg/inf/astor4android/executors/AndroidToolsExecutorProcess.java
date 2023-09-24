@@ -36,7 +36,8 @@ public class AndroidToolsExecutorProcess {
 	}
 
 	public static void compileProject(String projectLocation) throws Exception {
-		CommandExecutorProcess.execute(GRADLE + " build -x test -no-daemon", projectLocation);
+		//CommandExecutorProcess.execute(GRADLE + " build -x test -no-daemon", projectLocation);
+		CommandExecutorProcess.execute(GRADLE + " build -no-daemon", projectLocation);
 	}	
 	
 	public static List<String> runGradleTask(String projectLocation, String gradleTask) throws Exception  {

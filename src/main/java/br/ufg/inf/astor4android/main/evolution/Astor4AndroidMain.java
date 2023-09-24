@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import fr.inria.astor.core.setup.FinderTestCases;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.commons.cli.BasicParser;
@@ -93,6 +94,13 @@ public class Astor4AndroidMain extends AstorMain {
 
 		projectFacade = getProject(projectCopy, projectName, method, failingList, dependencies, true);
 		projectFacade.getProperties().setExperimentName(this.getClass().getSimpleName());
+
+		//List<String> tr = FinderTestCases.findTestCasesForRegression(
+		//		projectFacade.getOutDirWithPrefix(ProgramVariant.DEFAULT_ORIGINAL_VARIANT), projectFacade);
+
+		List<String> tr = AndroidProject.getInstance().getUnitTestCases();
+
+		projectFacade.getProperties().setRegressionCases(tr);
 
 		projectFacade.setupWorkingDirectories(ProgramVariant.DEFAULT_ORIGINAL_VARIANT);
 	}
